@@ -1,0 +1,14 @@
+build
+bin
+
+# IntelliJ Idea
+.idea
+
+# Gradle
+.gradle
+
+# Gradle binaries
+# just install gradle lol
+gradle/wrapper
+gradlew
+gradlew.bat
