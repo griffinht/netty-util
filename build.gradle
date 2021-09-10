@@ -5,6 +5,8 @@ plugins {
 group 'net.stzups.netty.util'
 version '1.0.1'
 
+apply from: rootProject.file('gradle/test.gradle')
+
 repositories {
     mavenCentral()
 }

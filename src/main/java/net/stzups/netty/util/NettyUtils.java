@@ -9,6 +9,8 @@ import java.io.RandomAccessFile;
 import java.lang.reflect.Array;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NettyUtils {
     /**
@@ -49,7 +51,7 @@ public class NettyUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, T extends Deserializer<A>> A[] readArray8(ByteBuf byteBuf, T deserializer) {
+    public static <A, T extends Deserializer<A>> A[] readArray8(ByteBuf byteBuf, T deserializer) throws DeserializationException {
         int length = byteBuf.readUnsignedByte();
         A[] array = null;
 
@@ -68,5 +70,36 @@ public class NettyUtils {
      */
     public static ByteBuf getFileByteBuffer(File file, FileChannel.MapMode mode) throws IOException {
         return Unpooled.wrappedBuffer(new RandomAccessFile(file, mode == FileChannel.MapMode.READ_ONLY ? "r" : "rw").getChannel().map(mode, 0, file.length()));
+    }
+
+
+
+
+
+
+    public static byte[] readBytes(ByteBuf byteBuf, int length) {
+        byte[] bytes = new byte[length];
+        byteBuf.readBytes(bytes);
+        return bytes;
+    }
+
+    public static <K, V, KK extends Deserializer<K>, VV extends Deserializer<V>> HashMap<K, V> readHashMap32(ByteBuf byteBuf, KK kk, VV vv) throws DeserializationException {
+        int length = byteBuf.readInt();
+        HashMap<K, V> map = new HashMap<>();
+
+        for (int i = 0; i < length; i++) {
+            map.put(kk.deserialize(byteBuf), vv.deserialize(byteBuf));
+        }
+
+        return map;
+    }
+
+    public static <K, V, KK extends Serializer<K>, VV extends Serializer<V>> void writeHashMap32(ByteBuf byteBuf, Map<K, V> map, KK kk, VV vv) {
+        byteBuf.writeInt(map.size());
+
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            kk.serialize(byteBuf, entry.getKey());
+            vv.serialize(byteBuf, entry.getValue());
+        }
     }
 }
