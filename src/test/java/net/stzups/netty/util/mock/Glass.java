@@ -1,5 +1,6 @@
 package net.stzups.netty.util.mock;
 
+import net.stzups.netty.DebugString;
 import net.stzups.netty.util.RandomUtil;
 
 import java.awt.*;
@@ -10,10 +11,7 @@ public class Glass {
 
     public Glass() {
         tint = RandomUtil.random.nextFloat();
-        color = new Color(
-                RandomUtil.random.nextFloat(),
-                RandomUtil.random.nextFloat(),
-                RandomUtil.random.nextFloat());
+        color = new Color(RandomUtil.random.nextInt());
     }
 
     public Glass(float tint, Color color) {
@@ -38,5 +36,13 @@ public class Glass {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return DebugString.get(getClass())
+                .add("tint", tint)
+                .add("color", color)
+                .toString();
     }
 }

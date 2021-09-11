@@ -1,6 +1,7 @@
 package net.stzups.netty.util.mock;
 
 import io.netty.buffer.ByteBuf;
+import net.stzups.netty.DebugString;
 import net.stzups.netty.util.DeserializationException;
 import net.stzups.netty.util.RandomUtil;
 import net.stzups.netty.util.Serializable;

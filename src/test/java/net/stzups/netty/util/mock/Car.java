@@ -1,12 +1,14 @@
 package net.stzups.netty.util.mock;
 
 import io.netty.buffer.ByteBuf;
+import net.stzups.netty.DebugString;
 import net.stzups.netty.util.DeserializationException;
 import net.stzups.netty.util.NettyUtils;
 import net.stzups.netty.util.RandomUtil;
 import net.stzups.netty.util.Serializable;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class Car implements Serializable {
     private final Wheel wheel;
@@ -55,8 +57,7 @@ public class Car implements Serializable {
                 windows,
                 (b, glass) -> {
                     b.writeFloat(glass.getTint());
-                    Color color = glass.getColor();
-                    b.writeInt(color.getRGB());
+                    b.writeInt(glass.getColor().getRGB());
                 }
         );
     }
@@ -69,9 +70,22 @@ public class Car implements Serializable {
                     model.equals(car.model) &&
                     manufacturer.equals(car.manufacturer) &&
                     vin == car.vin &&
-                    tank.equals(car.tank);
+                    tank.equals(car.tank) &&
+                    Arrays.equals(windows, car.windows);
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return DebugString.get(getClass())
+                .add("wheel", wheel)
+                .add("model", model)
+                .add("manufacturer", manufacturer)
+                .add("vin", vin)
+                .add("tank", tank)
+                .add("windows", windows)
+                .toString();
     }
 }

@@ -1,6 +1,7 @@
 package net.stzups.netty.util.mock;
 
 import io.netty.buffer.ByteBuf;
+import net.stzups.netty.DebugString;
 import net.stzups.netty.util.DeserializationException;
 import net.stzups.netty.util.NettyUtils;
 import net.stzups.netty.util.Serializable;
@@ -38,5 +39,12 @@ public class ParkingLot implements Serializable {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return DebugString.get(getClass())
+                .add("map", map)
+                .toString();
     }
 }

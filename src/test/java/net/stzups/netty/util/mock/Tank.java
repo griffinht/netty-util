@@ -1,5 +1,6 @@
 package net.stzups.netty.util.mock;
 
+import net.stzups.netty.DebugString;
 import net.stzups.netty.util.RandomUtil;
 
 public class Tank {
@@ -33,5 +34,13 @@ public class Tank {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return DebugString.get(getClass())
+                .add("amount", amount)
+                .add("diesel", diesel)
+                .toString();
     }
 }

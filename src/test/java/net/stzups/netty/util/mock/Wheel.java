@@ -1,6 +1,7 @@
 package net.stzups.netty.util.mock;
 
 import io.netty.buffer.ByteBuf;
+import net.stzups.netty.DebugString;
 import net.stzups.netty.util.NettyUtils;
 import net.stzups.netty.util.RandomUtil;
 import net.stzups.netty.util.Serializable;
@@ -44,5 +45,15 @@ public class Wheel implements Serializable {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return DebugString.get(getClass())
+                .add("maxPressure", maxPressure)
+                .add("pressure", pressure)
+                .add("diameter", diameter)
+                .add("manufacturer", manufacturer)
+                .toString();
     }
 }
