@@ -7,11 +7,18 @@ import org.junit.jupiter.api.Assertions;
 
 public class Test {
     @org.junit.jupiter.api.Test
-    public void test() throws DeserializationException {
-        ParkingLot parkingLot = new ParkingLot();
+    public void serializeDeserialize() throws DeserializationException {
+        // generate random test data
+        ParkingLot parkingLot = new ParkingLot(); // mock classes have no arg constructors that initialize the object with random values
 
         ByteBuf byteBuf = Unpooled.buffer();
+        // serialize to byteBuf
         parkingLot.serialize(byteBuf);
-        Assertions.assertEquals(new ParkingLot(byteBuf), parkingLot);
+
+        // deserialize from byteBuf
+        ParkingLot newParkingLot = new ParkingLot(byteBuf);
+
+        // should still be equal
+        Assertions.assertEquals(parkingLot, newParkingLot);
     }
 }
