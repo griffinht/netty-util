@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NettyUtils {
+    private static Length DEFAULT_LENGTH = Length.INT;
     public enum Length {
         BYTE {
             @Override
@@ -52,10 +53,7 @@ public class NettyUtils {
         abstract public void serialize(ByteBuf byteBuf, int value);
     }
 
-    public static void writeString(ByteBuf byteBuf, String string) {
-        writeString(byteBuf, string, Length.INT);
-    }
-
+    public static void writeString(ByteBuf byteBuf, String string) { writeString(byteBuf, string, DEFAULT_LENGTH); }
     public static void writeString(ByteBuf byteBuf, String string, Length l) {
         ByteBuf b = Unpooled.buffer();
         int length = b.writeCharSequence(string, StandardCharsets.UTF_8);
@@ -67,24 +65,17 @@ public class NettyUtils {
         byteBuf.writeBytes(b);
     }
 
-    public static String readString(ByteBuf byteBuf) {
-        return readString(byteBuf, Length.INT);
-    }
-
+    public static String readString(ByteBuf byteBuf) { return readString(byteBuf, DEFAULT_LENGTH); }
     public static String readString(ByteBuf byteBuf, Length l) {
         return byteBuf.readCharSequence(l.deserialize(byteBuf), StandardCharsets.UTF_8).toString();
     }
 
-    public static <T extends Serializable> void writeArray(ByteBuf byteBuf, T[] array) {
-        writeArray(byteBuf, array, Length.INT);
-    }
+    public static <T extends Serializable> void writeArray(ByteBuf byteBuf, T[] array) { writeArray(byteBuf, array, DEFAULT_LENGTH); }
     public static <T extends Serializable> void writeArray(ByteBuf byteBuf, T[] array, Length l) {
         writeArray(byteBuf, array, (b, o) -> o.serialize(b), l);
     }
 
-    public static <A, T extends Serializer<A>> void writeArray(ByteBuf byteBuf, A[] array, T serializer) {
-        writeArray(byteBuf, array, serializer, Length.INT);
-    }
+    public static <A, T extends Serializer<A>> void writeArray(ByteBuf byteBuf, A[] array, T serializer) { writeArray(byteBuf, array, serializer, DEFAULT_LENGTH); }
     public static <A, T extends Serializer<A>> void writeArray(ByteBuf byteBuf, A[] array, T serializer, Length l) {
         l.serialize(byteBuf, array.length);
         for (A element : array) {
@@ -92,10 +83,7 @@ public class NettyUtils {
         }
     }
 
-
-    public static <A, T extends Deserializer<A>> A[] readArray(Class<A> clazz, ByteBuf byteBuf, T deserializer) throws DeserializationException {
-        return readArray(clazz, byteBuf, deserializer, Length.INT);
-    }
+    public static <A, T extends Deserializer<A>> A[] readArray(Class<A> clazz, ByteBuf byteBuf, T deserializer) throws DeserializationException { return readArray(clazz, byteBuf, deserializer, DEFAULT_LENGTH); }
     public static <A, T extends Deserializer<A>> A[] readArray(Class<A> clazz, ByteBuf byteBuf, T deserializer, Length l) throws DeserializationException {
         int length = l.deserialize(byteBuf);
 
@@ -110,10 +98,8 @@ public class NettyUtils {
         return array;
     }
 
-    public static <K, V, KK extends Deserializer<K>, VV extends Deserializer<V>> HashMap<K, V> readHashMap(ByteBuf byteBuf, KK kk, VV vv) throws DeserializationException {
-        return readHashMap(byteBuf, kk, vv, Length.INT);
-    }
-    public static <K, V, KK extends Deserializer<K>, VV extends Deserializer<V>> HashMap<K, V> readHashMap(ByteBuf byteBuf, KK kk, VV vv, Length l) throws DeserializationException {
+    public static <K, V, KK extends Deserializer<K>, VV extends Deserializer<V>> Map<K, V> readMap(ByteBuf byteBuf, KK kk, VV vv) throws DeserializationException { return readMap(byteBuf, kk, vv, DEFAULT_LENGTH); }
+    public static <K, V, KK extends Deserializer<K>, VV extends Deserializer<V>> Map<K, V> readMap(ByteBuf byteBuf, KK kk, VV vv, Length l) throws DeserializationException {
         int length = l.deserialize(byteBuf);
         HashMap<K, V> map = new HashMap<>();
 
@@ -124,10 +110,8 @@ public class NettyUtils {
         return map;
     }
 
-    public static <K, V, KK extends Serializer<K>, VV extends Serializer<V>> void writeHashMap(ByteBuf byteBuf, Map<K, V> map, KK kk, VV vv) {
-        writeHashMap(byteBuf, map, kk, vv, Length.INT);
-    }
-    public static <K, V, KK extends Serializer<K>, VV extends Serializer<V>> void writeHashMap(ByteBuf byteBuf, Map<K, V> map, KK kk, VV vv, Length l) {
+    public static <K, V, KK extends Serializer<K>, VV extends Serializer<V>> void writeMap(ByteBuf byteBuf, Map<K, V> map, KK kk, VV vv) { writeMap(byteBuf, map, kk, vv, DEFAULT_LENGTH); }
+    public static <K, V, KK extends Serializer<K>, VV extends Serializer<V>> void writeMap(ByteBuf byteBuf, Map<K, V> map, KK kk, VV vv, Length l) {
         l.serialize(byteBuf, map.size());
 
         for (Map.Entry<K, V> entry : map.entrySet()) {
@@ -136,16 +120,19 @@ public class NettyUtils {
         }
     }
 
+
+
+
+
+
+
+
     /**
      * Get ByteBuf to read or write from specified file
      */
     public static ByteBuf getFileByteBuffer(File file, FileChannel.MapMode mode) throws IOException {
         return Unpooled.wrappedBuffer(new RandomAccessFile(file, mode == FileChannel.MapMode.READ_ONLY ? "r" : "rw").getChannel().map(mode, 0, file.length()));
     }
-
-
-
-
 
 
     public static byte[] readBytes(ByteBuf byteBuf, int length) {

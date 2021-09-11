@@ -21,12 +21,12 @@ public class ParkingLot implements Serializable {
     }
 
     public ParkingLot(ByteBuf byteBuf) throws DeserializationException {
-        map = NettyUtils.readHashMap(byteBuf, b -> new UUID(b.readLong(), b.readLong()), Car::new);
+        map = NettyUtils.readMap(byteBuf, b -> new UUID(b.readLong(), b.readLong()), Car::new);
     }
 
     @Override
     public void serialize(ByteBuf byteBuf) {
-        NettyUtils.writeHashMap(byteBuf, map, (b, uuid) -> {
+        NettyUtils.writeMap(byteBuf, map, (b, uuid) -> {
             b.writeLong(uuid.getMostSignificantBits());
             b.writeLong(uuid.getLeastSignificantBits());
         }, (b, car) -> car.serialize(b));
