@@ -18,6 +18,17 @@ public class NettyUtils {
         BYTE {
             @Override
             public int deserialize(ByteBuf byteBuf) { //todo allow for signed and unsigned types
+                return byteBuf.readByte();
+            }
+
+            public void serialize(ByteBuf byteBuf, int value) {
+                if (value > Byte.MAX_VALUE) throw new IllegalArgumentException("Value is too long to fit in a byte");
+                byteBuf.writeByte((byte) value);
+            }
+        },
+        U_BYTE {
+            @Override
+            public int deserialize(ByteBuf byteBuf) { //todo allow for signed and unsigned types
                 return byteBuf.readUnsignedByte();
             }
 
@@ -27,6 +38,17 @@ public class NettyUtils {
             }
         },
         SHORT {
+            @Override
+            public int deserialize(ByteBuf byteBuf) {
+                return byteBuf.readShort();
+            }
+
+            public void serialize(ByteBuf byteBuf, int value) {
+                if (value > Short.MAX_VALUE) throw new IllegalArgumentException("Value is too long to fit in a short");
+                byteBuf.writeShort((short) value);
+            }
+        },
+        U_SHORT {
             @Override
             public int deserialize(ByteBuf byteBuf) {
                 return byteBuf.readUnsignedShort();
