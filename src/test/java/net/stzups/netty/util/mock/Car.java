@@ -37,4 +37,18 @@ public class Car implements Serializable {
         byteBuf.writeFloat(tank.getAmount());
         byteBuf.writeBoolean(tank.isDiesel());
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Car car) {
+            return
+                    wheel.equals(car.wheel) &&
+                    model.equals(car.model) &&
+                    manufacturer.equals(car.manufacturer) &&
+                    vin == car.vin &&
+                    tank.equals(car.tank);
+        }
+
+        return false;
+    }
 }

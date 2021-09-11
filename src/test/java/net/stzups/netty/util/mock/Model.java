@@ -10,19 +10,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Model implements Serializable {
-    FORD(1),
-    TOYOTA(2),
-    HONDA(3),
+    FORD(0),
+    TOYOTA(1),
+    HONDA(2),
     ;
 
     private static final Map<Integer, Model> map = new HashMap<>();
     static {
-        for (Model model : EnumSet.allOf(Model.class)) {
+        EnumSet<Model> enumSet = EnumSet.allOf(Model.class);
+        for (Model model : enumSet) {
             map.put(model.id, model);
         }
     }
-    private final int id;
 
+    private final int id;
     Model(int id) {
         this.id = id;
     }
@@ -41,6 +42,8 @@ public enum Model implements Serializable {
     }
 
     public static Model random() {
-        return map.get(RandomUtil.random.nextInt(map.size()));
+        int bound = map.size();
+        int index = RandomUtil.random.nextInt(bound);
+        return map.get(index);
     }
 }

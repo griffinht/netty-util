@@ -32,4 +32,17 @@ public class Wheel implements Serializable {
         byteBuf.writeFloat(diameter);
         NettyUtils.writeString8(byteBuf, manufacturer);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Wheel wheel) {
+            return
+                    maxPressure == wheel.maxPressure &&
+                    pressure == wheel.pressure &&
+                    diameter == wheel.diameter &&
+                    manufacturer.equals(wheel.manufacturer);
+        }
+
+        return false;
+    }
 }

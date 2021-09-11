@@ -23,10 +23,20 @@ public class ParkingLot implements Serializable {
         map = NettyUtils.readHashMap32(byteBuf, b -> new UUID(b.readLong(), b.readLong()), Car::new);
     }
 
+    @Override
     public void serialize(ByteBuf byteBuf) {
         NettyUtils.writeHashMap32(byteBuf, map, (b, uuid) -> {
             b.writeLong(uuid.getMostSignificantBits());
             b.writeLong(uuid.getLeastSignificantBits());
         }, (b, car) -> car.serialize(b));
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ParkingLot parkingLot) {
+            return parkingLot.map.equals(map);
+        }
+
+        return false;
     }
 }

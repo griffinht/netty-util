@@ -23,4 +23,15 @@ public class Tank {
     public boolean isDiesel() {
         return diesel;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Tank tank) {
+            return
+                    amount == tank.amount &&
+                    diesel == tank.diesel;
+        }
+
+        return false;
+    }
 }
