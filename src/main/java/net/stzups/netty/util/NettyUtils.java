@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NettyUtils {
-    private static Length DEFAULT_LENGTH = Length.INT;
+    private static final Length DEFAULT_LENGTH = Length.INT;
     public enum Length {
         BYTE {
             @Override
