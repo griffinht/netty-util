@@ -23,7 +23,7 @@ public class Wheel implements Serializable {
         maxPressure = byteBuf.readInt();
         pressure = byteBuf.readInt();
         diameter = byteBuf.readFloat();
-        manufacturer = NettyUtils.readString8(byteBuf);
+        manufacturer = NettyUtils.readString(byteBuf);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Wheel implements Serializable {
         byteBuf.writeInt(maxPressure);
         byteBuf.writeInt(pressure);
         byteBuf.writeFloat(diameter);
-        NettyUtils.writeString8(byteBuf, manufacturer);
+        NettyUtils.writeString(byteBuf, manufacturer);
     }
 
     @Override

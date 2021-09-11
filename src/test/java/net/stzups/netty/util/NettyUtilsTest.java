@@ -8,8 +8,8 @@ public class NettyUtilsTest {
     @Test
     public void testZeroLength() throws DeserializationException {
         ByteBuf byteBuf = Unpooled.buffer();
-        NettyUtils.writeArray8(byteBuf, new String[0], NettyUtils::writeString8);
+        NettyUtils.writeArray(byteBuf, new String[0], NettyUtils::writeString);
 
-        NettyUtils.readArray8(String.class, byteBuf, NettyUtils::readString8);
+        NettyUtils.readArray(String.class, byteBuf, NettyUtils::readString);
     }
 }

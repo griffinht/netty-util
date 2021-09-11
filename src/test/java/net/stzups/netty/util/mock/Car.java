@@ -33,10 +33,10 @@ public class Car implements Serializable {
     public Car(ByteBuf byteBuf) throws DeserializationException {
         wheel = new Wheel(byteBuf);
         model = Model.deserialize(byteBuf);
-        manufacturer = NettyUtils.readString8(byteBuf);
+        manufacturer = NettyUtils.readString(byteBuf);
         vin = byteBuf.readLong();
         tank = new Tank(byteBuf.readFloat(), byteBuf.readBoolean());
-        windows = NettyUtils.readArray8(
+        windows = NettyUtils.readArray(
                 Glass.class,
                 byteBuf,
                 b -> new Glass(
@@ -49,11 +49,11 @@ public class Car implements Serializable {
     public void serialize(ByteBuf byteBuf) {
         wheel.serialize(byteBuf);
         model.serialize(byteBuf);
-        NettyUtils.writeString8(byteBuf, manufacturer);
+        NettyUtils.writeString(byteBuf, manufacturer);
         byteBuf.writeLong(vin);
         byteBuf.writeFloat(tank.getAmount());
         byteBuf.writeBoolean(tank.isDiesel());
-        NettyUtils.writeArray8(
+        NettyUtils.writeArray(
                 byteBuf,
                 windows,
                 (b, glass) -> {
