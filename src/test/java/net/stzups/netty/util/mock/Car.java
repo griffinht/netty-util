@@ -6,12 +6,15 @@ import net.stzups.netty.util.NettyUtils;
 import net.stzups.netty.util.RandomUtil;
 import net.stzups.netty.util.Serializable;
 
+import java.awt.*;
+
 public class Car implements Serializable {
     private final Wheel wheel;
     private final Model model;
     private final String manufacturer;
     private final long vin;
     private final Tank tank;
+    private final Glass[] windows;
 
     public Car() {
         wheel = new Wheel();
@@ -19,6 +22,10 @@ public class Car implements Serializable {
         manufacturer = RandomUtil.getString();
         vin = RandomUtil.random.nextLong();
         tank = new Tank();
+        windows = new Glass[RandomUtil.random.nextInt(10)];
+        for (int i = 0; i < windows.length; i++) {
+            windows[i] = new Glass();
+        }
     }
 
     public Car(ByteBuf byteBuf) throws DeserializationException {
@@ -27,6 +34,13 @@ public class Car implements Serializable {
         manufacturer = NettyUtils.readString8(byteBuf);
         vin = byteBuf.readLong();
         tank = new Tank(byteBuf.readFloat(), byteBuf.readBoolean());
+        windows = NettyUtils.readArray8(
+                byteBuf,
+                b -> new Glass(
+                        b.readFloat(),
+                        new Color(b.readInt())
+                )
+        );
     }
 
     public void serialize(ByteBuf byteBuf) {
@@ -36,6 +50,15 @@ public class Car implements Serializable {
         byteBuf.writeLong(vin);
         byteBuf.writeFloat(tank.getAmount());
         byteBuf.writeBoolean(tank.isDiesel());
+        NettyUtils.writeArray8(
+                byteBuf,
+                windows,
+                (b, glass) -> {
+                    b.writeFloat(glass.getTint());
+                    Color color = glass.getColor();
+                    b.writeInt(color.getRGB());
+                }
+        );
     }
 
     @Override
