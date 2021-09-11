@@ -24,7 +24,7 @@ public class Car implements Serializable {
         manufacturer = RandomUtil.getString();
         vin = RandomUtil.random.nextLong();
         tank = new Tank();
-        windows = new Glass[RandomUtil.random.nextInt(10) + 1];//todo try with 0
+        windows = new Glass[RandomUtil.random.nextInt(10) ];//todo try with 0
         for (int i = 0; i < windows.length; i++) {
             windows[i] = new Glass();
         }
@@ -37,6 +37,7 @@ public class Car implements Serializable {
         vin = byteBuf.readLong();
         tank = new Tank(byteBuf.readFloat(), byteBuf.readBoolean());
         windows = NettyUtils.readArray8(
+                Glass.class,
                 byteBuf,
                 b -> new Glass(
                         b.readFloat(),

@@ -5,7 +5,7 @@ import io.netty.buffer.Unpooled;
 import net.stzups.netty.util.mock.ParkingLot;
 import org.junit.jupiter.api.Assertions;
 
-public class Test {
+public class MockTest {
     @org.junit.jupiter.api.Test
     public void serializeDeserialize() throws DeserializationException {
         // generate random test data

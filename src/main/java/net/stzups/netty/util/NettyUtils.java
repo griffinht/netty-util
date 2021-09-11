@@ -50,16 +50,15 @@ public class NettyUtils {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A, T extends Deserializer<A>> A[] readArray8(ByteBuf byteBuf, T deserializer) throws DeserializationException {
+
+    public static <A, T extends Deserializer<A>> A[] readArray8(Class<A> clazz, ByteBuf byteBuf, T deserializer) throws DeserializationException {
         int length = byteBuf.readUnsignedByte();
-        if (length == 0) throw new DeserializationException("Tried to deserialize array with length 0");//todo fix
-        A[] array = null;
+
+        @SuppressWarnings("unchecked")
+        A[] array = (A[]) Array.newInstance(clazz, length);
 
         for (int i = 0; i < length; i++) {
             A object = deserializer.deserialize(byteBuf);
-            // :(
-            if (array == null) array = (A[]) Array.newInstance(object.getClass(), length);
             array[i] = object;
         }
 
