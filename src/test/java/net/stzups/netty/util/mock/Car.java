@@ -11,12 +11,14 @@ public class Car implements Serializable {
     private final Model model;
     private final String manufacturer;
     private final long vin;
+    private final Tank tank;
 
     public Car() {
-        this.wheel = new Wheel();
-        this.model = Model.random();
-        this.manufacturer = RandomUtil.getString();
-        this.vin = RandomUtil.random.nextLong();
+        wheel = new Wheel();
+        model = Model.random();
+        manufacturer = RandomUtil.getString();
+        vin = RandomUtil.random.nextLong();
+        tank = new Tank();
     }
 
     public Car(ByteBuf byteBuf) throws DeserializationException {
@@ -24,6 +26,7 @@ public class Car implements Serializable {
         model = Model.deserialize(byteBuf);
         manufacturer = NettyUtils.readString8(byteBuf);
         vin = byteBuf.readLong();
+        tank = new Tank(byteBuf.readFloat(), byteBuf.readBoolean());
     }
 
     public void serialize(ByteBuf byteBuf) {
@@ -31,5 +34,7 @@ public class Car implements Serializable {
         model.serialize(byteBuf);
         NettyUtils.writeString8(byteBuf, manufacturer);
         byteBuf.writeLong(vin);
+        byteBuf.writeFloat(tank.getAmount());
+        byteBuf.writeBoolean(tank.isDiesel());
     }
 }
